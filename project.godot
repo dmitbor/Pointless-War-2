@@ -1,0 +1,25 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="DudeSquads"
+run/main_scene="res://map.tscn"
+config/features=PackedStringArray("4.3", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+MainScript="*res://Scripts/AutoLoaders/main_script.gd"
+DataHandler="*res://Scripts/AutoLoaders/data_handler.gd"
+GraphicLoader="*res://Scripts/AutoLoaders/graphic_loader.gd"
+DrawScript="*res://Scripts/AutoLoaders/draw_script.gd"
+BattleMapGenerator="*res://Scripts/AutoLoaders/battle_map_generator.gd"
+DebugHandler="*res://Scripts/AutoLoaders/debug_handler.gd"

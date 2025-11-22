@@ -1,0 +1,12 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+/Visual/body.png.import
+/Visual/cuirass.png.import
+/Visual/gengun.png.import
+/Visual/hat.png.import
+/Visual/head.png.import
+/Visual/helmet.png.import
+/Visual/pistl.png.import
+/Visual/smg.png.import
+/Visual/uniform.png.import
