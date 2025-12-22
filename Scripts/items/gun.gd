@@ -21,12 +21,3 @@ func _init(gun_name, gun_num_hands, gun_weight, gun_damage, gun_given_range, gun
 	gun_load = gun_given_load
 	gun_acc_mod = given_acc_mod
 	item_img = gun_given_visual
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass

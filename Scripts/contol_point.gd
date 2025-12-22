@@ -37,12 +37,3 @@ func fully_captured(my_faction: Faction):
 		if con_control == con_max_control && con_faction.faction_id == my_faction.faction_id:
 			return true
 	return false
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass

@@ -16,12 +16,3 @@ func _init(armor_name, armor_weight, armor_given_type, head_armor, body_armor, r
 	armor_values = [head_armor, body_armor, rarm_armor, larm_armor, rleg_armor, lleg_armor]
 	item_img = armor_visual
 	remapable = remap_visual
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass

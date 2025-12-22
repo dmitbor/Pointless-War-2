@@ -19,12 +19,3 @@ func get_random_location():
 	var random_y = randi_range(zone_location[1] , zone_location[1] + zone_y_size)
 	print("Random Location: " + str(random_x) + "/" + str(random_y) + " for faction #" + str(zone_faction.faction_id))
 	return Vector2(random_x, random_y)
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass

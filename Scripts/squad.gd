@@ -164,7 +164,7 @@ func check_for_enemies():
 							return
 						else:
 						# Check to see if they are within hearing distance of me:
-							if member.get_location().distance_to(SearchedSoldier.get_location()) <= soldier_maxsight:
+							if member.get_location().distance_to(SearchedSoldier.get_location()) <= soldier_maxhear:
 								obj_targets.append(SearchedSoldier)
 								return
 								
@@ -242,8 +242,6 @@ func set_objective_combat(type : String, first_target = null):
 			start_combat.set_subtype("PanicSearchCombat")
 		_:
 			print("How the hell we got here?")
-	
-	var my_fac_id = Squad_Faction.faction_id
 	
 	if first_target:
 		start_combat.Targets.append(first_target)
@@ -358,15 +356,6 @@ func act_out():
 									return
 								Squad_Objectives[0].Objective_SubType = "MidCombat"
 								print("Entering Combat with " + str(Squad_Objectives[0].Targets.size()) + " targets")
-				
-						#elif ((Squad_Objectives[0].Objective_Type == "Combat" || Squad_Objectives[0].Objective_Type == "Hunt Down") && !Squad_Objectives[0].Complete):
-							## If no target or not a live one, find a new one.
-							#if !member.dude_individual_target || !member.dude_individual_target.is_alive():
-								#member.select_closest_target()
-							## Otherwise, engage the target.
-							#else:
-								#member.go_towards_or_shoot()
-					
 
 func assign_targets():
 	for member in Members:
@@ -386,7 +375,3 @@ func count_live_members():
 		if soldier.is_alive():
 			live_members += 1
 	return live_members
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass

@@ -4,6 +4,8 @@ extends Node2D
 var dude_x = 0
 var dude_y = 0
 
+var current_subsector : SubSector
+
 # Name of the Soldier
 var dude_name = "Dude Duderson"
 # Speed, based on Agility / 10
@@ -34,8 +36,18 @@ var dude_hearing_distance = 100
 var dude_command_value = 0
 # Current Facing Angle
 var dude_angle = 0.0
+
+# Currently held item by the Soldier. To replace Held Weapon. References item in inventory.
+var dude_held_item : Item
+# Rest of the items carried by the soldier.
+var dude_inventory : Array[Item]
+# How many of soldier's hands are occupied.
+var dude_hands_available = 2
+
 # Current Weapon held by Soldier
 var dude_weapon : Weapon
+
+
 # Currently worn armor of the Soldier. First Armor is for body, second is hat/helmet.
 var dude_armor : Array[Armor]
 #  Current Squad of the Soldier
@@ -99,6 +111,7 @@ func set_to_loc(given_x = 0, given_y = 0):
 		dude_y = given_y
 	else:
 		set_rand_around_loc(given_x, given_y)
+	current_subsector = DataHandler.add_soldier_to_subsector(self)
 
 func set_rand_around_loc(given_x = 0, given_y = 0):
 	if self == dude_squad.Leader:
@@ -108,6 +121,15 @@ func set_rand_around_loc(given_x = 0, given_y = 0):
 		var placed = false
 		var failed = false
 		var new_loc = Vector2.UP.from_angle(randf_range(0, 2 * PI)) * (dude_squad.Members.size() * 10) + Vector2(given_x, given_y)
+		
+		if new_loc.x > DataHandler.map_size_x:
+			new_loc.x = DataHandler.map_size_x
+		if new_loc.x < 0:
+			new_loc.x = 0
+		if new_loc.y > DataHandler.map_size_y:
+			new_loc.y = DataHandler.map_size_y
+		if new_loc.y < 0:
+			new_loc.y = 0
 		
 		while !placed:
 			failed = false
@@ -161,10 +183,6 @@ func get_skills():
 	new_skill.set_skill_info("Melee", 5, 0, "")
 	dude_skills.append(new_skill)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-	
 func rotate_or_move(target):
 	if rotate_to(target) == 0:
 		go_towards(target)
@@ -187,29 +205,32 @@ func go_towards(target):
 	if turn_pref == 1:
 		turn_mod = 0 - turn_mod
 		
+	var subsector_loc = DataHandler.get_subsector_loc(dude_x, dude_y, dude_speed)
+	var viable_interlopers = DataHandler.get_soldier_from_sector_and_close(current_subsector.sector_x, current_subsector.sector_y, subsector_loc)
 	
 	while !stepped && attempts < 6:
 		blocked = false
-		for squad in DataHandler.Squads:
-			# If Squad is within 50 units of distance
-			if squad == dude_squad || squad.count_live_members() > 0 && new_location.distance_to(squad.Leader.get_location()) <= 50:
-				# Check if any of the members of the squad could get in the way
-				for squad_member in squad.Members:
-					if squad_member != self:
-						total_distance = dude_width + squad_member.dude_width
-						# Squad Mates can move closer to each other
-						if squad == dude_squad:
-							total_distance = total_distance / 2
-						if new_location.distance_to(squad_member.get_location()) <= total_distance:
-							#print("Too close of distance - Width: " + str(total_distance) + " Distance:" + str(get_location().distance_to(squad_member.get_location())))
-							blocked = true
-							# Last attempt
-							if attempts == 5:
-								new_location = Vector2.UP.from_angle(get_location().angle_to_point(squad_member.get_location())) * (0 - dude_speed_final) + Vector2(dude_x, dude_y)
-								dude_x = new_location.x
-			dude_y = 			new_location.y
+		for interloper in viable_interlopers:
+			if interloper != self:
+				total_distance = dude_width + interloper.dude_width
+				# Squad Mates can move closer to each other
+				if interloper.dude_squad == dude_squad:
+					total_distance = total_distance / 2
+				if new_location.distance_to(interloper.get_location()) <= total_distance:
+					#print("Too close of distance - Width: " + str(total_distance) + " Distance:" + str(get_location().distance_to(squad_member.get_location())))
+					blocked = true
+					# Last attempt
+					if attempts == 5:
+						new_location = Vector2.UP.from_angle(get_location().angle_to_point(interloper.get_location())) * (0 - dude_speed_final) + Vector2(dude_x, dude_y)
+						dude_x = new_location.x
+						dude_y = new_location.y
 		if !blocked:
 			stepped = true
+			
+			if entered_new_sector():
+				# Remove Self from Subsector
+				current_subsector.sector_soldiers.remove_at(current_subsector.sector_soldiers.find(self))
+				current_subsector = DataHandler.add_soldier_to_subsector(self, new_location.x, new_location.y)
 			dude_x = new_location.x
 			dude_y = new_location.y
 		else:
@@ -327,7 +348,6 @@ func go_towards_or_shoot():
 					reload_weapon()
 	
 func fire_at_target():
-	var target_range = get_location().distance_to(dude_individual_target.get_location())
 	var shot_value = randi_range(0, 100)
 	var skill_mod = 0
 	var shot_ability = (dude_stats["Perception"] + dude_stats["Agility"]) / 2
@@ -386,6 +406,9 @@ func take_damage(weapon_damage):
 		dude_body_health[damage_location] = 0
 	
 	if (!is_alive()):
+		if (current_subsector):
+			current_subsector.sector_soldiers.remove_at(current_subsector.sector_soldiers.find(self))
+			current_subsector = null
 		dude_squad.recount_squad_speed()
 		if (dude_squad.Leader == self):
 			dude_squad.find_new_leader()
@@ -401,6 +424,17 @@ func reload_weapon():
 		#print("Reloaded!")
 		shots_remaining = dude_weapon.gun_load
 		shot_cooldown = 0
+	
+func find_item(searched_name : String):
+	for i in range(dude_inventory.size()):
+		if dude_inventory[i].item_name == searched_name:
+			return i
+	# Return -1 if item is not found
+	return -1
+	
+func switch_item(item_index : int):
+	dude_held_item = dude_inventory[item_index]
+	dude_hands_available = 2 - dude_held_item.hands_usage
 	
 func move_lad_rand():
 	dude_x = dude_x + (randi_range(-1, 1) * dude_speed)
@@ -434,5 +468,19 @@ func get_armor_txtr(type):
 		if armor.armor_type == type:
 			return [armor.item_img, armor.remapable]
 
-func make_stat_roll(Stat):
-		return randi_range(0, 100) <= dude_stats["Luck"]
+func get_matching_armor_type(type):
+	for armor in dude_armor:
+		if armor.armor_type == type:
+			return armor
+
+func make_stat_roll(Stat : String):
+		return randi_range(0, 100) <= dude_stats[Stat]
+
+func entered_new_sector():
+	var sector_x = int(dude_x / 200) - 1
+	var sector_y = int(dude_y / 200) - 1
+	
+	if sector_x == current_subsector.sector_x && sector_y == current_subsector.sector_y:
+		return false
+	else:
+		return true

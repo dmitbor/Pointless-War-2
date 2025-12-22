@@ -17,9 +17,12 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-MainScript="*res://Scripts/AutoLoaders/main_script.gd"
 DataHandler="*res://Scripts/AutoLoaders/data_handler.gd"
 GraphicLoader="*res://Scripts/AutoLoaders/graphic_loader.gd"
 DrawScript="*res://Scripts/AutoLoaders/draw_script.gd"
 BattleMapGenerator="*res://Scripts/AutoLoaders/battle_map_generator.gd"
 DebugHandler="*res://Scripts/AutoLoaders/debug_handler.gd"
+
+[debug]
+
+gdscript/warnings/integer_division=0

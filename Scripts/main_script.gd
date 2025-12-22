@@ -1,6 +1,7 @@
 extends Node2D
 
 var squad_size_current = 5
+var selected_dude
 
 func do_everything():
 	#print(str(DataHandler.Soldiers.size()))
@@ -21,21 +22,28 @@ func do_everything():
 		
 	
 func react_to_shots_and_remove_dead():
-	# Check every soldier against every landed shot
+	# Check every soldier in the Soldier Array
 	for soldier in DataHandler.Soldiers:
 		# Remove the dead into their own little Array
 		if !soldier.is_alive():
 			DataHandler.Dead_Soldiers.append(DataHandler.Soldiers.pop_at(DataHandler.Soldiers.find(soldier)))
 		else:
-			if (soldier.dude_squad.Squad_Objectives[0].Objective_Type != "Combat"):
-				for shot in DataHandler.Shots:
-					if shot.shot_to.distance_to(soldier.get_location()) <= soldier.dude_hearing_distance:
-						soldier.dude_squad.set_objective_combat("HeardShot")
-					if shot.shot_to.distance_to(soldier.get_location()) <= soldier.dude_width:
-						if !soldier.make_stat_roll("Luck") && shot.damage != 0:
-							soldier.take_damage(shot.damage)
-	
-	DataHandler.Shots.clear()
+			if DataHandler.Shots.size() > 0:
+				# Check for every shot in the close subsectors to the soldier
+				var subsector_loc = DataHandler.get_subsector_loc(soldier.dude_x, soldier.dude_y, soldier.dude_width)
+				var viable_shots = DataHandler.get_shots_from_sector_and_close(soldier.current_subsector.sector_x, soldier.current_subsector.sector_y, subsector_loc)
+				
+				if viable_shots:
+					for shot in viable_shots:
+						if shot.shot_to.distance_to(soldier.get_location()) <= soldier.dude_width:
+							if !soldier.make_stat_roll("Luck") && shot.damage != 0:
+								print("unlucky!")
+								soldier.take_damage(shot.damage)
+						
+						if shot.shot_to.distance_to(soldier.get_location()) <= soldier.dude_hearing_distance && soldier.dude_squad.Squad_Objectives[0].Objective_Type != "Combat":
+							soldier.dude_squad.set_objective_combat("HeardShot")
+			DataHandler.Shots.clear()
+			DataHandler.clear_all_shot_arrays()
 	
 func check_objectives():
 	for squad in DataHandler.Squads:
@@ -89,6 +97,35 @@ func  _input(event):
 				squad_size_current = squad_size_current - 1
 				if squad_size_current < 1:
 					squad_size_current = 1
+			KEY_CTRL:
+				if DebugHandler.show_subsectors:
+					print("Hidding Subsectors")
+					DebugHandler.show_subsectors = false
+				else:
+					print("Showing Subsectors")
+					DebugHandler.show_subsectors = true
+	if event is InputEventMouseButton and event.is_released():
+		if event.button_index == 2:
+			var offset_loc = event.position + Vector2(abs(DrawScript.x_offset), abs(DrawScript.y_offset))
+			print(offset_loc)
+			var distance = 0
+			var soldier_found = false
+			var statmenu : PanelContainer = $"UI Menus/MainPanelCont"
+			for soldier in DataHandler.Soldiers:
+				distance = soldier.get_location().distance_to(offset_loc)
+				#print(str(soldier.dude_squad.Squad_ID) + "|X/Y:" + str(soldier.get_location()) + "|" + str(soldier.get_id()) + "|" + str(distance))
+				if distance <= soldier.dude_width * 2:
+					if (selected_dude != soldier):
+						selected_dude = soldier
+						print(soldier)
+						statmenu.position = Vector2(0,28)
+						soldier_found = true
+						DataHandler.Selected_Dude = soldier
+						return
+			if !soldier_found:
+				selected_dude = null
+			if !selected_dude:
+				statmenu.position = Vector2(-240,28)
 	pass
 
 # Called when the node enters the scene tree for the first time.
@@ -126,7 +163,7 @@ func _draw() -> void:
 	draw_string(ThemeDB.fallback_font, Vector2(30,70), "Live Squads:" + str(DataHandler.Squads.size()), HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(0, 0, 0, 1))
 	draw_string(ThemeDB.fallback_font, Vector2(30,90), "Dead Soldiers:" + str(DataHandler.Dead_Soldiers.size()), HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(0, 0, 0, 1))
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if Engine.get_frames_drawn() % 3 == 0:
 		react_to_shots_and_remove_dead()
 		do_everything()
@@ -136,4 +173,3 @@ func _physics_process(delta: float) -> void:
 		check_distances()
 		check_for_enemies()
 	pass
-		

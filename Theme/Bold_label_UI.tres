@@ -1,0 +1,8 @@
+[gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://c28ygevr6ljqx"]
+
+[ext_resource type="FontFile" uid="uid://c0uc3i8t6upok" path="res://Theme/typewcond_bold.otf" id="1_k5kyl"]
+
+[resource]
+font = ExtResource("1_k5kyl")
+font_size = 24
+font_color = Color(0, 0, 0, 1)

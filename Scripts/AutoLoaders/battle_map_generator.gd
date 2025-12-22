@@ -1,8 +1,5 @@
 extends Node
 
-var map_size_x = 1800
-var map_size_y = 1000
-
 var spawn_zones : Array[SpawnZone] = []
 
 
@@ -11,6 +8,11 @@ func _ready() -> void:
 	pass # Replace with function body.
 
 func set_up_map():
+	var map_size_x = DataHandler.map_size_x
+	var map_size_y = DataHandler.map_size_y
+	
+	# Create Subsector web
+	DataHandler.set_all_subsectors(map_size_x / 200, map_size_y / 200)
 	# Main Point in the center
 	var main_cap_point = ControlPoint.new(DataHandler.GetNewPointID())
 	main_cap_point.set_point_level(5)
@@ -58,6 +60,9 @@ func set_up_map():
 		
 
 func set_spawn_zones(faction_number : int):
+	var map_size_x = DataHandler.map_size_x
+	var map_size_y = DataHandler.map_size_y
+	
 	for faction_spawn in range(1, faction_number + 1):
 		print(faction_number)
 		var new_spawn = SpawnZone.new()
@@ -91,7 +96,3 @@ func attempt_to_get_location_within_limits(min_x: int, x_size: int, min_y: int, 
 			
 		print("Failed to Place a Capture Point: " + con_point.con_point_ID)
 		return null
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass

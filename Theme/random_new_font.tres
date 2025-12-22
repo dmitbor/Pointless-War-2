@@ -1,0 +1,6 @@
+[gd_resource type="SystemFont" format=3 uid="uid://c42gn6cgogufx"]
+
+[resource]
+font_italic = true
+msdf_pixel_range = 50
+msdf_size = 6000

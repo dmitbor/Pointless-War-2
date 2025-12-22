@@ -101,6 +101,12 @@ func _draw() -> void:
 		shot_to_mod = shot_to_mod + Vector2(x_offset, y_offset)
 		draw_line(shot_from_mod,shot_to_mod, Color.YELLOW, 1.0)
 	
+	if DebugHandler.show_subsectors:
+		for slice_x in DataHandler.SubSectors:
+			for subsector : SubSector in slice_x:
+				#var sub_sect_rect = Rect2(Vector2(100 + subsector.sector_x * 20, 100 + subsector.sector_y * 20), Vector2(180, 180))
+				#draw_rect(sub_sect_rect, Color.BEIGE)
+				draw_string(ThemeDB.fallback_font, Vector2(110 + subsector.sector_x * 20, 100 + subsector.sector_y * 20), str(subsector.sector_soldiers.size()))
 
 
 # Called when the node enters the scene tree for the first time.

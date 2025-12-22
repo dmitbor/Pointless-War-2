@@ -1,15 +1,540 @@
-[gd_scene load_steps=3 format=3 uid="uid://50hl54hth71m"]
+[gd_scene load_steps=22 format=3 uid="uid://50hl54hth71m"]
+
+[ext_resource type="FontFile" uid="uid://4l3vr2ppmggp" path="res://Theme/typewcond_regular.otf" id="1_3vyhy"]
+[ext_resource type="Script" path="res://Scripts/main_script.gd" id="1_rknxd"]
+[ext_resource type="FontFile" uid="uid://c5aetbowqajty" path="res://Theme/typewcond_demi.otf" id="2_657f4"]
+[ext_resource type="FontFile" uid="uid://c0uc3i8t6upok" path="res://Theme/typewcond_bold.otf" id="2_pf623"]
+[ext_resource type="SystemFont" uid="uid://c42gn6cgogufx" path="res://Theme/random_new_font.tres" id="2_xdxyx"]
+[ext_resource type="StyleBox" uid="uid://d1ynhec8qdr0i" path="res://Theme/health_box_style.tres" id="4_rh27x"]
+[ext_resource type="LabelSettings" uid="uid://c28ygevr6ljqx" path="res://Theme/Bold_label_UI.tres" id="4_w06ll"]
+[ext_resource type="Texture2D" uid="uid://do5rbl7exbob6" path="res://Visual/pistl.png" id="5_0ts0r"]
+[ext_resource type="Script" path="res://Scripts/UIScripts/stat_menu_updater.gd" id="5_xcrk7"]
+[ext_resource type="Script" path="res://Scripts/UIScripts/UI_dude_draw.gd" id="6_gb4s1"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1bmqt"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_n7qee"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5hohn"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fgw5k"]
+bg_color = Color(0.77429, 0.772897, 0.584456, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t0ym8"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hhukl"]
+bg_color = Color(0.853982, 0.856364, 0.706214, 1)
+
+[sub_resource type="Theme" id="Theme_2hgn2"]
+default_font = ExtResource("1_3vyhy")
+default_font_size = 20
+ItemList/colors/font_color = Color(0.0962047, 0.0962048, 0.0962047, 1)
+ItemList/colors/font_hovered_color = Color(0.154875, 0.154876, 0.154876, 1)
+ItemList/colors/font_selected_color = Color(0.377919, 0.377919, 0.377919, 1)
+ItemList/colors/guide_color = Color(0.194349, 0.194349, 0.194349, 0.25)
+ItemList/constants/h_separation = 20
+ItemList/styles/panel = SubResource("StyleBoxFlat_fgw5k")
+Label/colors/font_color = Color(0, 0, 0, 1)
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_t0ym8")
+TabContainer/styles/panel = SubResource("StyleBoxFlat_hhukl")
+
+[sub_resource type="Theme" id="Theme_8s2q6"]
+default_font = ExtResource("2_xdxyx")
+
+[sub_resource type="Theme" id="Theme_0pp6w"]
+Label/fonts/font = null
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mjmax"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_x0lqp"]
+
 [node name="Map" type="Node2D"]
+script = ExtResource("1_rknxd")
 
 [node name="Actual Map" type="Sprite2D" parent="."]
 modulate = Color(0.0627613, 0.801994, 0.256139, 1)
 z_index = -2
 material = SubResource("ShaderMaterial_1bmqt")
-position = Vector2(1500, 1500)
-scale = Vector2(3000, 3000)
+position = Vector2(1000, 550)
+scale = Vector2(2000, 1100)
 texture = SubResource("CanvasTexture_n7qee")
+
+[node name="UI Menus" type="CanvasLayer" parent="."]
+
+[node name="MainPanelCont" type="PanelContainer" parent="UI Menus"]
+offset_left = -240.0
+offset_top = 28.0
+offset_bottom = 563.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_5hohn")
+
+[node name="StatMenu" type="GridContainer" parent="UI Menus/MainPanelCont"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme = SubResource("Theme_2hgn2")
+script = ExtResource("5_xcrk7")
+
+[node name="Tabs" type="TabContainer" parent="UI Menus/MainPanelCont/StatMenu"]
+custom_minimum_size = Vector2(230, 0)
+layout_mode = 2
+current_tab = 2
+tab_focus_mode = 0
+
+[node name="Personal" type="VBoxContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs"]
+visible = false
+custom_minimum_size = Vector2(210, 300)
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+
+[node name="nameLbl" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/MarginContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_657f4")
+text = "Person Duderino"
+horizontal_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="ColorRect" type="ColorRect" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+color = Color(0.935571, 0.936407, 0.863712, 1)
+
+[node name="dudeVisual" type="TextureRect" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer/ColorRect"]
+layout_mode = 2
+offset_right = 80.0
+offset_bottom = 130.0
+stretch_mode = 2
+script = ExtResource("6_gb4s1")
+
+[node name="MarginContainer2" type="MarginContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+
+[node name="GridContainer" type="GridContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2"]
+layout_mode = 2
+theme_override_constants/h_separation = 15
+theme_override_constants/v_separation = 5
+columns = 3
+
+[node name="unused" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer"]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("4_rh27x")
+
+[node name="headHealthTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer/PanelContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "5"
+horizontal_alignment = 1
+
+[node name="unused2" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer"]
+layout_mode = 2
+
+[node name="PanelContainer2" type="PanelContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("4_rh27x")
+
+[node name="rArmHealthTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer/PanelContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "10
+"
+horizontal_alignment = 1
+
+[node name="unused3" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer"]
+layout_mode = 2
+
+[node name="PanelContainer3" type="PanelContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("4_rh27x")
+
+[node name="lArmHealthTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer/PanelContainer3"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "10
+"
+horizontal_alignment = 1
+
+[node name="unused6" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer"]
+layout_mode = 2
+
+[node name="PanelContainer4" type="PanelContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("4_rh27x")
+
+[node name="bodyHealthTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer/PanelContainer4"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "30
+"
+horizontal_alignment = 1
+
+[node name="unused4" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer"]
+layout_mode = 2
+
+[node name="PanelContainer6" type="PanelContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("4_rh27x")
+
+[node name="rLegHealthTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer/PanelContainer6"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "10
+"
+horizontal_alignment = 1
+
+[node name="unused5" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer"]
+layout_mode = 2
+
+[node name="PanelContainer7" type="PanelContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("4_rh27x")
+
+[node name="lLegHealthTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/HBoxContainer/MarginContainer2/GridContainer/PanelContainer7"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "10
+"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_right = 15
+
+[node name="GridContainer" type="GridContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+columns = 2
+
+[node name="dudeIDTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_pf623")
+theme_override_font_sizes/font_size = 18
+text = "Soldier ID:"
+horizontal_alignment = 2
+
+[node name="dudeIDLbl" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "1"
+
+[node name="squadIDTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_pf623")
+theme_override_font_sizes/font_size = 18
+text = "Squad ID:"
+horizontal_alignment = 2
+
+[node name="squadIDLbl" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "2"
+
+[node name="energyTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_pf623")
+theme_override_font_sizes/font_size = 18
+text = "Energy:"
+horizontal_alignment = 2
+
+[node name="energyLbl" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/VBoxContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "50"
+
+[node name="HSeparator" type="HSeparator" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="MarginContainer3" type="MarginContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/MarginContainer3"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/MarginContainer3/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_pf623")
+text = "Wounds:"
+
+[node name="ItemList" type="ItemList" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Personal/MarginContainer3/VBoxContainer"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+item_count = 2
+item_0/text = "Leg Wound"
+item_1/text = "Head Hole"
+
+[node name="Squad" type="VBoxContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs"]
+visible = false
+custom_minimum_size = Vector2(210, 500)
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Squad"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Squad/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+
+[node name="LdrTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Squad/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_pf623")
+theme_override_font_sizes/font_size = 20
+text = "Leader:
+"
+
+[node name="MarginContainer2" type="MarginContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Squad/PanelContainer"]
+layout_mode = 2
+theme = SubResource("Theme_8s2q6")
+theme_type_variation = &"1"
+theme_override_constants/margin_left = 80
+
+[node name="LeaderInfoLabel" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Squad/PanelContainer/MarginContainer2"]
+layout_direction = 2
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_3vyhy")
+theme_override_font_sizes/font_size = 18
+text = "Dude"
+
+[node name="mbmrTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Squad"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_pf623")
+text = "Members:"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Squad"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="LiveList" type="ItemList" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Squad/MarginContainer"]
+layout_mode = 2
+item_count = 4
+item_0/text = "Dude1"
+item_0/selectable = false
+item_1/text = "Dude2"
+item_1/selectable = false
+item_2/text = "Dude3"
+item_2/selectable = false
+item_3/text = "Dude4"
+item_3/selectable = false
+
+[node name="HSeparator" type="HSeparator" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Squad"]
+layout_mode = 2
+
+[node name="ddMbmrTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Squad"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_pf623")
+text = "Dead Members:"
+horizontal_alignment = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Squad"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="DeadList" type="ItemList" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Squad/MarginContainer2"]
+layout_mode = 2
+item_count = 2
+item_0/text = "Dude5"
+item_0/selectable = false
+item_1/text = "Dude6"
+item_1/selectable = false
+
+[node name="HSeparator2" type="HSeparator" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Squad"]
+layout_mode = 2
+
+[node name="ObjTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Squad"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_pf623")
+text = "Objectives:
+"
+horizontal_alignment = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Squad"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ObjList" type="ItemList" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Squad/MarginContainer3"]
+layout_mode = 2
+item_count = 2
+item_0/text = "Combat"
+item_0/selectable = false
+item_1/text = "Capture"
+item_1/selectable = false
+
+[node name="Items" type="VBoxContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs"]
+custom_minimum_size = Vector2(210, 420)
+layout_mode = 2
+theme = SubResource("Theme_0pp6w")
+metadata/_tab_index = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+
+[node name="ItemsHeld" type="GridContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer"]
+layout_mode = 2
+theme_override_constants/v_separation = 2
+columns = 2
+
+[node name="headTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer/ItemsHeld"]
+layout_mode = 2
+text = "Head:
+"
+label_settings = ExtResource("4_w06ll")
+horizontal_alignment = 2
+
+[node name="headItemBtn" type="Button" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer/ItemsHeld"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxEmpty_mjmax")
+text = "Helmet (5H)"
+
+[node name="bodyTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer/ItemsHeld"]
+layout_mode = 2
+text = "Body:"
+label_settings = ExtResource("4_w06ll")
+horizontal_alignment = 2
+
+[node name="bodyItemBtn" type="Button" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer/ItemsHeld"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxEmpty_x0lqp")
+text = "Cuirass (10B 1A)"
+
+[node name="heldTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer/ItemsHeld"]
+layout_mode = 2
+text = "Holding:"
+label_settings = ExtResource("4_w06ll")
+horizontal_alignment = 2
+
+[node name="heldItemBtn" type="Button" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer/ItemsHeld"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxEmpty_x0lqp")
+text = "Pistol (6 Shots)"
+
+[node name="HSeparator" type="HSeparator" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items"]
+layout_mode = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_right = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer2"]
+layout_mode = 2
+
+[node name="otherItemsTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+text = "Other Items:"
+label_settings = ExtResource("4_w06ll")
+
+[node name="ItemsList" type="ItemList" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer2/VBoxContainer"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+item_count = 2
+item_0/text = "Rifle"
+item_1/text = "Shovel"
+
+[node name="HSeparator2" type="HSeparator" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items"]
+layout_mode = 2
+
+[node name="MarginContainer3" type="MarginContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_right = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer3"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer3/HBoxContainer"]
+custom_minimum_size = Vector2(50, 10)
+layout_mode = 2
+texture = ExtResource("5_0ts0r")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="itemInfoGrid" type="GridContainer" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer3/HBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="ItemNameTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer3/HBoxContainer/itemInfoGrid"]
+layout_mode = 2
+text = "Name:"
+label_settings = ExtResource("4_w06ll")
+
+[node name="ItemNameLbl" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer3/HBoxContainer/itemInfoGrid"]
+layout_mode = 2
+text = "Pistol"
+
+[node name="ItemRngTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer3/HBoxContainer/itemInfoGrid"]
+layout_mode = 2
+text = "Range:"
+label_settings = ExtResource("4_w06ll")
+
+[node name="ItemRngLbl" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer3/HBoxContainer/itemInfoGrid"]
+layout_mode = 2
+text = "100"
+
+[node name="ItemDmgTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer3/HBoxContainer/itemInfoGrid"]
+layout_mode = 2
+text = "Damage:"
+label_settings = ExtResource("4_w06ll")
+
+[node name="ItemDmgLbl" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer3/HBoxContainer/itemInfoGrid"]
+layout_mode = 2
+text = "5"
+
+[node name="ItemUseTxt" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer3/HBoxContainer/itemInfoGrid"]
+layout_mode = 2
+text = "Max Ammo:"
+label_settings = ExtResource("4_w06ll")
+
+[node name="ItemUseLbl" type="Label" parent="UI Menus/MainPanelCont/StatMenu/Tabs/Items/MarginContainer3/HBoxContainer/itemInfoGrid"]
+layout_mode = 2
+text = "6"
